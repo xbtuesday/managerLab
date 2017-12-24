@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laboratory.system.user.dao.UserDao">
+    <!--keyProperty 将自增长后的id赋值给实体类-->
+    <!--useGeneratedKeys 配置为true 给主键设置自增长-->
+    <!--以上两个配置在插入时返回主键到实体类
+        此处是方法一： -->
+    <!-- <insert></insert> 没有resultType标签 -->
+    <insert id="insert" parameterType="userModel" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO user_manage
+        <!-- prefix 给包含内容加上前缀,suffix:给包含内容加上后缀,suffixOverrides：忽略后缀的某些内容,prefixOverrides:忽略前缀的某些内容  -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName !=''">
+                username,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="password != null and password !=''">
+                password,
+            </if>
+            <if test="sult != null and sult !=''">
+                sult,
+            </if>
+            <if test="age != null and age !=''">
+                age,
+            </if>
+            <if test="sex != null and sex !=''">
+                sex,
+            </if>
+            <if test="phone != null and phone !=''">
+                phone,
+            </if>
+            <if test="email != null and email !=''">
+                email,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isDelete != null">
+               isDelete,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="memo != null and memo !=''">
+                memo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName !=''">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null and name !=''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password !=''">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sult != null and sult !=''">
+                #{sult,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null and age !=''">
+                #{age,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null and sex !=''">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone !=''">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email !=''">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="memo != null and memo !=''">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--方法二：-->
+    <!--<insert></insert> 中没有resultType属性，但是<selectKey></selectKey> 标签是有的。-->
+    <!-- order="AFTER" 表示先执行插入后执行查询 可为BEFORE  BEFORE时会先选择主键然后设置keyProperty 后执行-->
+
+
+    <select id="selectModel" parameterType="userModel" resultType="userModel">
+        select * FROM  user_manage WHERE  1=1
+        <if test="id != null and id !=''">
+            AND id = #{id}
+        </if>
+        <if test="userName != null and userName !=''">
+            AND user_name=#{userName}
+        </if>
+        <if test="mobile !=null and mobile!=''">
+            AND mobile=#{mobile}
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM user_manage WHERE  id=#{id,jdbcType=VARCHAR}
+    </delete>
+    <update id="updateStatus" parameterType="string">
+        UPDATE user_manage SET
+        <if test="isUsed != null and isUsed!=''">
+            is_used=#{isUsed}
+        </if>
+        WHERE id=#{id}
+    </update>
+    <update id="update" parameterType="userModel">
+        UPDATE user_manage
+        <set>
+            <trim suffixOverrides=",">
+                <if test="userName != null and userName !=''">
+                    username=#{userName},
+                </if>
+                <if test="name != null and name !=''">
+                    name=#{name},
+                </if>
+                <if test="password != null and password !=''">
+                    password=#{password},
+                </if>
+                <if test="sult != null and sult !=''">
+                   sult=#{sult},
+                </if>
+                <if test="age != null and age !=''">
+                    age=#{age},
+                </if>
+                <if test="sex != null and sex !=''">
+                    sex=#{sex},
+                </if>
+                <if test="phone != null and phone !=''">
+                    phone=#{phone},
+                </if>
+                <if test="email != null and email !=''">
+                    email=#{email},
+                </if>
+                <if test="status != null">
+                    status=#{status},
+                </if>
+                <if test="type != null">
+                    type=#{type},
+                </if>
+                <if test="isDelete != null">
+                    isDelete=#{isDelete},
+                </if>
+                <if test="createTime != null and createTime !=''">
+                    create_time=#{create_time},
+                </if>
+                <if test="updateTime != null and updateTime !=''">
+                    update_time=#{update_time},
+                </if>
+                <if test="memo!= null and memo !=''">
+                    memo=#{memo},
+                </if>
+            </trim>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <select id="selectAllByPage" parameterType="java.util.Map" resultType="userModel">
+        SELECT  *  FROM  explame_user_manager WHERE  1=1
+        <if test="userName != null and  userName !=''">
+            AND user_name=#{userName}
+        </if>
+        <if test="phone != null and phone !=''">
+            AND   phone=#{phone}
+        </if>
+
+    </select>
+
+
+    <select id="selectUserByUserName" parameterType="java.util.Map" resultType="userModel">
+          SELECT  *  FROM  explame_user_manager WHERE  1=1
+        <if test="userName != null and  userName !=''">
+            AND  user_name=#{userName}
+        </if>
+        <if test="phone != null and phone !=''">
+            AND   phone=#{phone}
+        </if>
+    </select>
+
+</mapper>
